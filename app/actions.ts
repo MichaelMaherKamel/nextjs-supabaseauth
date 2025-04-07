@@ -8,6 +8,8 @@ export const signUpAction = async (formData: FormData) => {
   const email = formData.get('email')?.toString()
   const password = formData.get('password')?.toString()
   const displayName = formData.get('displayName')?.toString()
+  const userRole = formData.get('userRole')?.toString() || 'individual'
+
   const supabase = await createClient()
   const origin = (await headers()).get('origin')
 
@@ -19,12 +21,18 @@ export const signUpAction = async (formData: FormData) => {
     return encodedRedirect('error', '/sign-up', 'Display name is required')
   }
 
+  // Validate role is one of the allowed values
+  const validRoles = ['mentor', 'individual', 'organization']
+  if (!validRoles.includes(userRole)) {
+    return encodedRedirect('error', '/sign-up', 'Invalid user role selected')
+  }
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: {
-        role: 'individual',
+        role: userRole,
         displayName: displayName,
       },
       emailRedirectTo: `${origin}/auth/callback`,
