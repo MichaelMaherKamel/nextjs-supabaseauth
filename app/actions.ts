@@ -20,7 +20,7 @@ export const signUpAction = async (formData: FormData) => {
     password,
     options: {
       data: {
-        role: 'user',
+        role: 'individual',
       },
       emailRedirectTo: `${origin}/auth/callback`,
     },

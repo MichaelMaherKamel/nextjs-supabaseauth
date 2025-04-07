@@ -1,7 +1,7 @@
-import FetchDataSteps from '@/components/tutorial/fetch-data-steps'
-import { createClient } from '@/utils/supabase/server'
 import { InfoIcon, UserIcon } from 'lucide-react'
+import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
+import RoleSelector from '@/components/role-selector'
 
 export default async function ProtectedPage() {
   const supabase = await createClient()
@@ -14,7 +14,7 @@ export default async function ProtectedPage() {
   }
 
   // Extract user metadata
-  const metadata = user.user_metadata
+  const metadata = user.user_metadata || {}
   const userRole = metadata?.role || 'No role assigned'
 
   return (
@@ -56,12 +56,10 @@ export default async function ProtectedPage() {
             )}
           </div>
         </div>
-      </div>
 
-      {/* <div>
-        <h2 className="font-bold text-2xl mb-4">Next steps</h2>
-        <FetchDataSteps />
-      </div> */}
+        {/* Role Selector Component */}
+        <RoleSelector currentRole={userRole as 'mentor' | 'individual' | 'organization' | 'No role assigned' | ''} />
+      </div>
     </div>
   )
 }
